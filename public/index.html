@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="shortcut icon" type="image/jpg" href="whatsapp.png" />
+    <title>GuptChat</title>
+</head>
+
+<body>
+
+    <audio src="sent.mp3" id="sent"></audio>
+    <div class="sidebar">
+        <div class="header">
+            <div class="avatar">
+                <img src="avatar1.jpg" alt="">
+            </div>
+            <div class="chat-header-right">
+                <img src="circle-notch-solid.svg" alt="">
+                <img src="chat.svg" alt="">
+                <img src="more.svg" alt="">
+            </div>
+        </div>
+        <div class="sidebar-search">
+            <div class="sidebar-search-container">
+                <img src="search-solid.svg" alt="">
+                <input type="text" placeholder="Search or start new chat">
+            </div>
+        </div>
+        <div class="sidebar-chats" id="online">
+            <div class="sidebar-chat">
+                <div class="chat-avatar">
+                    <img src="Abhishek.webp" alt="">
+                </div>
+                <div class="chat-info">
+                    <h4>Abhishek</h4>
+                    <p>developer</p>
+                </div>
+                <div class="time">
+                    <p>2:44 pm</p>
+                </div>
+            </div>
+
+           
+
+        </div>
+    </div>
+    <div class="message-container">
+        <div class="header">
+            <div class="chat-title">
+                <div class="avatar">
+                    <img src="appLogo.jpg" alt="">
+                </div>
+                <div class="message-header-content">
+                    <h4>Group Chat</h4>
+                    <!-- <p id="status">online</p> -->
+                </div>
+            </div>
+            <div class="chat-header-right">
+                <img src="search-solid.svg" alt="">
+                <img src="more.svg" alt="">
+            </div>
+        </div>
+        <div class="message-content" id="messagebox">
+            <p class="chat-message" id="chat-content1"> <span id="username">~ Abhishek</span><br><span class="text">Welcome to GC, free and smart chatting app !</span><span
+                    class='chat-timestamp'></span>
+                <br>
+               
+            </p>
+
+            <!-- <p class="chat-message chat-sent" id="chat-content2"><span></span><span></span><span class="text">Waiting to become eternal</span> <span class='chat-timestamp'>11:34 pm</span></p> -->
+
+
+        </div>
+        <div class="message-footer">
+            <!-- <img src="smile.svg" alt=" "> -->
+            <form  id="takedata">
+                <textarea name="prompt" id="getdata" cols="30" rows="10"></textarea>
+                <button type="submit" id ="translator" >T</button>
+                 <!-- <button type="submit" id ="summarizer">S</button> -->
+
+               
+            </form> 
+            <img src="paper-clip.svg" alt="">
+
+          
+                <input type="text" placeholder="Type a message" id="insert">
+                <img src="sent.png" id="send" alt="">
+
+            
+              
+           
+
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
