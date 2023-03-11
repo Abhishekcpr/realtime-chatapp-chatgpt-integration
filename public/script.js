@@ -27,6 +27,8 @@ if(username)
 }
 document.getElementById("insert").addEventListener('keyup',(e)=>{
     // e.preventDefault()
+
+   
     
     if(e.keyCode === 13)
     {
@@ -68,6 +70,7 @@ document.getElementById("send").addEventListener('click', (e)=>{
 
            
         }
+
 
         socket.emit('message', messageContent)
         appendMessage((content),"me")
@@ -149,8 +152,8 @@ function appendMessage(content, sender, ID)
 
 function addPerson(name,ID)
 {
-   var person =  document.getElementById("online") ;
-    Status = "online"
+   var joinedUser =  document.getElementById("online") ;
+   
    var onlineDiv = document.createElement('div')
    onlineDiv.classList.add('sidebar-chat') 
 
@@ -169,13 +172,26 @@ function addPerson(name,ID)
 `
 
 
-person.appendChild(onlineDiv) ;
+joinedUser.appendChild(onlineDiv) ;
 }
 
 
 socket.on('user-data',(messageContent)=>{
     
-    addPerson(messageContent.user, messageContent.ID) ;
+   var connectedUser = document.getElementById("online") ;
+   connectedUser.innerHTML = "";
+
+    //  allUsers.push({
+    //    user : messageContent.user,
+    //    ID : messageContent.ID 
+    //  })
+    console.log(messageContent)
+    for(let person of messageContent)
+    {
+
+        addPerson(person.user, person.ID) ;
+
+    }
 })
 
 // when you receive a  message :

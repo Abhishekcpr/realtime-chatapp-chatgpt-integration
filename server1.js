@@ -21,6 +21,7 @@ const io = require('socket.io')(http)
 
 // store player names : (must be unique)
 
+const allUsers = []
 const players = []
 block = false ;
 var turn = 0
@@ -42,13 +43,22 @@ io.on('connection', (socket) => {
             clientID : content.ID,
             name : content.user 
         })
+
+        allUsers.push({
+            user : content.user,
+            ID : content.ID
+        })
+
+
         // players[socket.id] = content.user ;
         // players.push(content.user); 
         
          
         console.log(socket.id);
          
-        socket.broadcast.emit('user-data',content) ;
+        socket.broadcast.emit('user-data',allUsers) ;
+        socket.emit('user-data',allUsers )
+        
     })
 
   
@@ -66,7 +76,18 @@ io.on('connection', (socket) => {
         for (let player of players) {
             if (player.serverID === socket.id) {
               socket.broadcast.emit('left', player.clientID);
+
+               
               console.log(player);
+
+               for(i = 0; i < allUsers.length; i++)
+               {
+                 if(allUsers[i].ID == player.clientID)
+                 {
+                    allUsers.splice(i,1) ;
+                    break ;
+                 }
+               }
               break; // assuming there is only one matching player, we can break out of the loop once we find it
             }
           }
