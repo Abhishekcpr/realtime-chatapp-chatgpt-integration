@@ -86,8 +86,8 @@ io.on('connection', (socket) => {
     socket.on('private-message',(content,members)=>{
 
         console.log("privacy activated");
-        console.log(members);
-        console.log(players);
+        // console.log(members);
+        // console.log(players);
 
         // socketArray[1].broadcast.emit('private-message',content) ;
         for(var i = 0; i< members.length; i++)
