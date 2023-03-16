@@ -98,7 +98,6 @@ io.on('connection', (socket) => {
              {
                 if( players[y].clientID == x)
                 {   
-                    console.log(socketArray[y].id + " " + players[y].serverID);
                    socketArray[y].emit('private-message',content) ;
                 }  
              }
