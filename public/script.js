@@ -5,6 +5,9 @@ var myID ;
 var messagecontent
 var sound = document.getElementById("sent") ;
 var messageContent
+var isPrivate = false 
+
+var privateChat = []
 
 // var allUsers = []
 // var Status = document.getElementById("status").innerHTML
@@ -40,12 +43,24 @@ document.getElementById("insert").addEventListener('keyup',(e)=>{
          messageContent = {
             user : username,
             sandesh : content ,
-            ID : myID
+            ID : myID,
+            isPrivate
 
            
         }
 
-        socket.emit('message', messageContent)
+        // for public chat :
+        if(!isPrivate)
+        {
+            socket.emit('message', messageContent)
+        }
+        else
+        {
+            socket.emit('private-message', messageContent,privateChat)
+        }
+
+
+
         appendMessage((content),"me")
         document.getElementById("insert").value = ""
     }
@@ -66,13 +81,24 @@ document.getElementById("send").addEventListener('click', (e)=>{
          messageContent = {
             user : username,
             sandesh : content ,
-            ID : myID
+            ID : myID,
+            isPrivate
 
            
         }
 
 
-        socket.emit('message', messageContent)
+       
+        if(!isPrivate)
+        {
+            socket.emit('message', messageContent)
+
+        }
+        else
+        {
+            socket.emit('private-message', messageContent, privateChat)
+        }
+
         appendMessage((content),"me")
         document.getElementById("insert").value = ""
 })
@@ -108,7 +134,7 @@ function getCurrentTime() {
   }
    
 
-function appendMessage(content, sender, ID)
+function appendMessage(content, sender, privacy)
 {
   
     messageDiv = document.createElement('p') ;
@@ -129,7 +155,7 @@ function appendMessage(content, sender, ID)
         messageDiv.classList.add("chat-message") 
 
        
-        messageDiv.innerHTML = `<span id="username">~ ${sender}</span><br> <span class="text">${content}</span><span class='chat-timestamp'>${getCurrentTime()}</span>
+        messageDiv.innerHTML = `<span id="username">~ ${sender}${(privacy ? " (private chat)" : "")}</span><br> <span class="text">${content}</span><span class='chat-timestamp'>${getCurrentTime()}</span>
         <br>
        
         `
@@ -157,6 +183,7 @@ function addPerson(name,ID)
    var onlineDiv = document.createElement('div')
    onlineDiv.classList.add('sidebar-chat') 
 
+   onlineDiv.setAttribute('id',("a" + ID)) ;
    
    onlineDiv.innerHTML  = `  
    <div class="chat-avatar" >
@@ -198,9 +225,20 @@ socket.on('user-data',(messageContent)=>{
 socket.on('message',(content)=>{
  
    sound.play()
-    appendMessage(content.sandesh,content.user); 
+    appendMessage(content.sandesh,content.user,content.isPrivate); 
 
 })
+
+socket.on('private-message',(content)=>{
+ 
+    sound.play()
+     appendMessage(content.sandesh,content.user, content.isPrivate); 
+ 
+ })
+
+
+
+
 
 socket.on('typing', (myID)=>{
      document.getElementById(myID).innerHTML = "typing..."
@@ -212,6 +250,7 @@ socket.on('not-typing', (myID)=>{
    // status.innerHTML = `${username} is typing...
 })
 
+
 socket.on('left',(leftID)=>{
 
     console.log(leftID + " diconnect");
@@ -219,7 +258,52 @@ socket.on('left',(leftID)=>{
   
 }) ;
 
+// selecting messages for private chat :
+const userContainer = document.getElementById("online");
 
+userContainer.addEventListener("click", function(event) {
+  if (event.target.classList.contains("sidebar-chat")) {
+    var userID = event.target.id;
+   
+
+   var element =  document.getElementById(userID);
+
+//  
+     
+     userID = userID + ""
+     userID = userID.substring(1)
+      
+     if(privateChat.includes(userID))
+     {
+        index = privateChat.indexOf(userID) ;
+        privateChat.splice(index,1) ; 
+
+        element.style.backgroundColor = "#ffffff";
+       
+     }
+     else
+     {
+        privateChat.push(userID) ; 
+        element.style.backgroundColor = "rgb(198, 232, 224)";
+      
+     }
+
+     if(privateChat.length == 0)
+     {
+        isPrivate = false ;
+     }
+     else
+     {
+        isPrivate = true ;
+     }
+
+    
+
+   
+     
+  
+  }
+})
 // translating and summarizing code :
 
 
@@ -246,7 +330,7 @@ chatContainer.addEventListener("click", function(event) {
 
     console.log("message received" +  document.getElementById("getdata").value);
 
-
+     
    
     
 

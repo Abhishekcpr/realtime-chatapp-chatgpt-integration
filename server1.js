@@ -24,6 +24,9 @@ const io = require('socket.io')(http)
 const allUsers = []
 const players = []
 block = false ;
+
+const socketArray = []
+check = true
 var turn = 0
 io.on('connection', (socket) => {
     console.log('A user connected ...');
@@ -36,7 +39,11 @@ io.on('connection', (socket) => {
             serverID : socket.id ,
             clientID : content.ID,
             name : content.user 
-        })                     
+        }) 
+
+       
+            // console.log(socketArray[0] + "this one");
+        
 
          console.log({
             serverID : socket.id ,
@@ -44,6 +51,10 @@ io.on('connection', (socket) => {
             name : content.user 
         })
 
+
+        socketArray.push(socket) ; 
+        
+        
         allUsers.push({
             user : content.user,
             ID : content.ID
@@ -63,9 +74,42 @@ io.on('connection', (socket) => {
 
   
     socket.on('message',(content)=>{
-     
+        
         socket.broadcast.emit('message',content) ;
+        // socketArray[2].emit('message',content) ;
+      
+
+       
     })
+
+    // receiving and sending private chats 
+    socket.on('private-message',(content,members)=>{
+
+        console.log("privacy activated");
+        console.log(members);
+        console.log(players);
+
+        // socketArray[1].broadcast.emit('private-message',content) ;
+        for(var i = 0; i< members.length; i++)
+        {
+             var x = members[i]
+
+             for(var y = 0; y < allUsers.length; y++)
+             {
+                if( players[y].clientID == x)
+                {   
+                    console.log(socketArray[y].id + " " + players[y].serverID);
+                   socketArray[y].emit('private-message',content) ;
+                }  
+             }
+        }
+       
+         
+
+       
+    })
+
+
     socket.on('disconnect',()=>{
 
         
@@ -84,7 +128,8 @@ io.on('connection', (socket) => {
                {
                  if(allUsers[i].ID == player.clientID)
                  {
-                    allUsers.splice(i,1) ;
+                    allUsers.splice(i,1) ; // remove user data form array
+                    socketArray.splice(i,1); // remove socket form array
                     break ;
                  }
                }
