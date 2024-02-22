@@ -3,24 +3,17 @@
 const express = require('express')
 const  dotenv =  require('dotenv') 
 const app2  = express()
-
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config()
-// console.log(process.env) 
-const {Configuration, OpenAIApi}  = require('openai') 
-// dotenv.config() ;
 
 
-const configuration = new Configuration({
-    // apiKey : process.env.OPEN_API_KEY,
-    apiKey : process.env.OPEN_API_KEY
 
-})
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 
 
 // console.log(process.env.OPEN_API_KEY);
 
-const openai = new OpenAIApi(configuration)
 const cors= require('cors')
 const port = process.env.PORT || 3000
 
@@ -43,20 +36,16 @@ app2.post('/', async(req,res)=>{
         console.log(prompt);
         
     
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: `${prompt}`,
-            temperature: 0,
-            max_tokens: 60,
-            top_p: 1.0,
-            frequency_penalty: 0.0,
-            presence_penalty: 0.0,
-          });
-         
-        console.log(response.data.choices[0].text)
+        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+
+      
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        console.log(text);
     
         res.status(200).send({
-          bot: response.data.choices[0].text
+          bot: text
         });
 
     

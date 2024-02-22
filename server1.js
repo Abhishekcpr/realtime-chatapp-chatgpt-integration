@@ -2,7 +2,7 @@ const express = require('express')
 const app1 = express()
 const http = require('http').createServer(app1)
 
-const PORT1 = process.env.PORT || 8000
+const PORT1 = process.env.PORT || 5000
 
 http.listen(PORT1, () => {
     console.log(`Listening on port ${PORT1}`)
@@ -13,6 +13,8 @@ app1.use(express.static(__dirname + '/public'))
 app1.get('/', (req, res) => {
     res.sendFile(__dirname +'/public' +  '/index.html')
 })
+
+
 
 // const secureKey = 9211 ;
 // Socket 
@@ -161,6 +163,35 @@ io.on('connection', (socket) => {
 
 
  
+app1.post('/', async(req,res)=>{
+    try {
+        const prompt = req.body.prompt;
+        console.log(prompt);
+        
+    
+        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
+      
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        console.log(text);
+    
+        res.status(200).send({
+          bot: text
+        });
+
+    
+      } 
+    catch(err)
+    {
+        res.status(400).send("unable to connect...")
+    }
+})
+
+// app1.listen(PORT1,(err)=>{
+//     if(!err)
+//     console.log(`server running at port ${port}`);
+// })
 
 
