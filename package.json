@@ -10,6 +10,9 @@
   "repository": {
     "type": "git"
   },
+  "engines": {
+    "node": "20.6.0"
+  },
   "author": "Abhishek",
   "license": "ISC",
   "bugs": {},
