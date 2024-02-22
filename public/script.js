@@ -381,7 +381,7 @@ handleRequest = async(e)=>{
     loader(messageText)
 
         // fetching data from server :
-        const response = await fetch('http://localhost:8000/', {
+        const response = await fetch('https://serverforchatgptresponse.onrender.com', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
